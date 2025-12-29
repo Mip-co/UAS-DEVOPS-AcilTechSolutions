@@ -3,23 +3,22 @@ name: CI/CD Professional Deploy
 on:
   push:
     branches:
-      - main  # Ganti ke master jika branch kamu namanya master
+      - main
 
 jobs:
   deploy:
-    runs-on: self-hosted  # Menggunakan runner yang sudah kamu instal di VM
+    runs-on: self-hosted
     steps:
-      - name: Ambil Kode Terbaru
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Sinkronisasi ke Folder Web
+      - name: Deploy to Nginx Folder
         run: |
-          # 1. Pastikan folder tujuan ada dan dimiliki user VMIP
-          sudo mkdir -p /var/www/web-uas
-          sudo chown -R VMIP:VMIP /var/www/web-uas
+          # 1. Hapus isi folder web agar tidak numpuk dengan file lama
+          sudo rm -rf /var/www/web-uas/*
           
-          # 2. Salin file dari workspace runner ke folder Nginx
-          cp -R . /var/www/web-uas/
+          # 2. Copy semua file dari repo (lokasi saat ini) ke folder web
+          sudo cp -R . /var/www/web-uas/
           
-          # 3. Reload Nginx agar perubahan langsung muncul
+          # 3. Reload Nginx
           sudo systemctl reload nginx
