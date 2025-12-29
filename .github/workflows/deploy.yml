@@ -1,0 +1,24 @@
+name: CI/CD Auto Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted 
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Update Web Content
+        run: |
+          # Pindah ke direktori project yang ditemukan tadi
+          cd /home/VMIP/actions-runner/_work/UAS-DEVOPS-AcilTechSolutions/UAS-DEVOPS-AcilTechSolutions
+          
+          # Ambil perubahan terbaru
+          git pull origin main
+          
+          # Jika ini adalah web statis (HTML), proses selesai.
+          # Jika butuh restart service (misal Nginx), tambahkan di bawah:
+          # sudo systemctl restart nginx
