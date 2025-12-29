@@ -1,9 +1,8 @@
-name: CI/CD Professional Deploy
+name: CI/CD Final Deploy
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
   deploy:
@@ -12,10 +11,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Deploy to Nginx Folder
+      - name: Update Web
         run: |
-          # Perintah ini sekarang tidak akan minta password karena visudo tadi
+          # Perintah-perintah ini sekarang aman karena NOPASSWD: ALL
           sudo rm -rf /var/www/web-uas/*
           sudo cp -R . /var/www/web-uas/
-          sudo chmod -R 755 /var/www/web-uas
           sudo systemctl reload nginx
