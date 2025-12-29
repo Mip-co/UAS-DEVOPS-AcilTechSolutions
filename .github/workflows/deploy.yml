@@ -11,14 +11,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Update Web Content
+      - name: Deploy to Web Server Folder
         run: |
-          # Pindah ke direktori project yang ditemukan tadi
+          # 1. Masuk ke folder hasil download runner
           cd /home/VMIP/actions-runner/_work/UAS-DEVOPS-AcilTechSolutions/UAS-DEVOPS-AcilTechSolutions
           
-          # Ambil perubahan terbaru
-          git pull origin main
+          # 2. Hapus file lama di folder web (opsional agar bersih)
+          rm -rf /var/www/html/*
           
-          # Jika ini adalah web statis (HTML), proses selesai.
-          # Jika butuh restart service (misal Nginx), tambahkan di bawah:
-          # sudo systemctl restart nginx
+          # 3. Copy semua file project ke folder Nginx
+          cp -R . /var/www/html/
