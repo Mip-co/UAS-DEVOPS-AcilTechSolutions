@@ -1,22 +1,25 @@
-name: Deploy to VM
+name: CI/CD Professional Deploy
 
 on:
   push:
     branches:
-      - main
+      - main  # Ganti ke master jika branch kamu namanya master
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-
+    runs-on: self-hosted  # Menggunakan runner yang sudah kamu instal di VM
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VM_HOST }}
-          username: ${{ secrets.VM_USER }}
-          key: ${{ secrets.VM_SSH_KEY }}
-          script: |
-            cd /var/www/web-uas
-            git pull origin main
-            sudo systemctl reload nginx
+      - name: Ambil Kode Terbaru
+        uses: actions/checkout@v4
+
+      - name: Sinkronisasi ke Folder Web
+        run: |
+          # 1. Pastikan folder tujuan ada dan dimiliki user VMIP
+          sudo mkdir -p /var/www/web-uas
+          sudo chown -R VMIP:VMIP /var/www/web-uas
+          
+          # 2. Salin file dari workspace runner ke folder Nginx
+          cp -R . /var/www/web-uas/
+          
+          # 3. Reload Nginx agar perubahan langsung muncul
+          sudo systemctl reload nginx
