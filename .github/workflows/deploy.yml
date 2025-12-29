@@ -1,0 +1,21 @@
+name: CI/CD Auto Deploy
+
+on:
+  push:
+    branches: [ "main" ] # Memicu update setiap push ke branch main
+
+jobs:
+  deploy:
+    runs-on: self-hosted # Menggunakan runner yang baru kamu instal di VM
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Web Folder
+        run: |
+          # SESUAIKAN: ganti ke folder tempat file web kamu berada di VM
+          # Contoh: /var/www/html atau folder project kamu
+          cd /home/VMIP/UAS-DEVOPS-AcilTechSolutions 
+          
+          # Ambil perubahan terbaru dari GitHub
+          git pull origin main
