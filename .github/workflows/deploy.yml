@@ -6,18 +6,22 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted 
+    runs-on: self-hosted
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Deploy to Web Server Folder
+      - name: Deploy to Nginx Folder
         run: |
-          # 1. Masuk ke folder hasil download runner
-          cd /home/VMIP/actions-runner/_work/UAS-DEVOPS-AcilTechSolutions/UAS-DEVOPS-AcilTechSolutions
+          # 1. Pastikan folder tujuan ada
+          mkdir -p /var/www/html
           
-          # 2. Hapus file lama di folder web (opsional agar bersih)
+          # 2. Hapus file lama di /var/www/html agar bersih
+          # Gunakan rm -rf ./* untuk menghapus semua file/folder di dalamnya
           rm -rf /var/www/html/*
           
-          # 3. Copy semua file project ke folder Nginx
+          # 3. Copy file dari runner (folder saat ini) ke folder Nginx
           cp -R . /var/www/html/
+          
+          # 4. Beri izin baca untuk web server
+          chmod -R 755 /var/www/html
