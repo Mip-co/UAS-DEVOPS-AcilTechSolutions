@@ -14,11 +14,8 @@ jobs:
 
       - name: Deploy to Nginx Folder
         run: |
-          # 1. Hapus isi folder web agar tidak numpuk dengan file lama
+          # Perintah ini sekarang tidak akan minta password karena visudo tadi
           sudo rm -rf /var/www/web-uas/*
-          
-          # 2. Copy semua file dari repo (lokasi saat ini) ke folder web
           sudo cp -R . /var/www/web-uas/
-          
-          # 3. Reload Nginx
+          sudo chmod -R 755 /var/www/web-uas
           sudo systemctl reload nginx
