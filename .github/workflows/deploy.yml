@@ -1,5 +1,4 @@
 name: CI/CD Auto Deploy
-
 on:
   push:
     branches: [ "main" ]
@@ -11,17 +10,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Deploy to Nginx Folder
+      - name: Copy Files to Web Server
         run: |
-          # 1. Pastikan folder tujuan ada
-          mkdir -p /var/www/html
-          
-          # 2. Hapus file lama di /var/www/html agar bersih
-          # Gunakan rm -rf ./* untuk menghapus semua file/folder di dalamnya
+          # Menghapus file lama dan menyalin yang baru
           rm -rf /var/www/html/*
-          
-          # 3. Copy file dari runner (folder saat ini) ke folder Nginx
           cp -R . /var/www/html/
-          
-          # 4. Beri izin baca untuk web server
-          chmod -R 755 /var/www/html
