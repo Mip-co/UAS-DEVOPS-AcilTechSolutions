@@ -1,17 +1,22 @@
-name: CI/CD Auto Deploy
+name: Deploy to VM
+
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   deploy:
-    runs-on: self-hosted
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    runs-on: ubuntu-latest
 
-      - name: Copy Files to Web Server
-        run: |
-          # Menghapus file lama dan menyalin yang baru
-          rm -rf /var/www/html/*
-          cp -R . /var/www/html/
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            cd /var/www/web-uas
+            git pull origin main
+            sudo systemctl reload nginx
