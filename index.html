@@ -577,32 +577,81 @@
 
         <div class="row justify-content-center">
           <div class="col-lg-8">
-            <form action="https://formspree.io/f/mvzzpndo" method="POST" class="contact-form-custom" data-aos="fade-up"
-              data-aos-delay="200">
+            <form id="my-form" action="https://formspree.io/f/xlggeryl" method="POST" class="contact-form-custom"
+              data-aos="fade-up" data-aos-delay="200">
               <div class="row gy-4">
 
                 <div class="col-md-6">
-                  <input type="text" name="name" class="form-control" placeholder="Nama Anda" required>
+                  <input type="text" name="name" id="name" class="form-control" placeholder="Nama Anda" required>
                 </div>
 
                 <div class="col-md-6">
-                  <input type="email" name="email" class="form-control" placeholder="Email Anda" required>
+                  <input type="email" name="email" id="email" class="form-control" placeholder="Email Anda" required>
                 </div>
 
                 <div class="col-12">
-                  <input type="text" name="subject" class="form-control" placeholder="Subjek" required>
+                  <input type="text" name="subject" id="subject" class="form-control" placeholder="Subjek" required>
                 </div>
 
                 <div class="col-12">
-                  <textarea name="message" class="form-control" rows="6" placeholder="Pesan Anda" required></textarea>
+                  <textarea name="message" id="message" class="form-control" rows="6" placeholder="Pesan Anda"
+                    required></textarea>
                 </div>
 
                 <div class="col-12 text-center">
-                  <button type="submit" class="btn-send-custom">Kirim Pesan</button>
+                  <button type="submit" id="submit-btn" class="btn-send-custom">Kirim Pesan</button>
+                  <p id="status" style="margin-top: 10px;"></p>
                 </div>
 
               </div>
             </form>
+
+            <script>
+              var form = document.getElementById("my-form");
+
+              async function handleSubmit(event) {
+                event.preventDefault(); // Mencegah pindah halaman
+                var status = document.getElementById("status");
+                var data = new FormData(event.target);
+                var button = document.getElementById("submit-btn");
+
+                button.disabled = true; // Matikan tombol biar gak klik 2x
+                button.innerText = "Mengirim...";
+
+                fetch(event.target.action, {
+                  method: form.method,
+                  body: data,
+                  headers: {
+                    'Accept': 'application/json'
+                  }
+                }).then(response => {
+                  if (response.ok) {
+                    status.innerHTML = "Terima kasih! Pesan telah terkirim.";
+                    status.style.color = "green";
+                    form.reset(); // INI YANG MEMBERSIHKAN FORM
+                  } else {
+                    response.json().then(data => {
+                      if (Object.hasOwn(data, 'errors')) {
+                        status.innerHTML = data["errors"].map(error => error["message"]).join(", ");
+                      } else {
+                        status.innerHTML = "Ops! Ada kendala saat mengirim.";
+                      }
+                      status.style.color = "red";
+                    })
+                  }
+                }).catch(error => {
+                  status.innerHTML = "Ops! Ada kendala teknis.";
+                  status.style.color = "red";
+                }).finally(() => {
+                  button.disabled = false;
+                  button.innerText = "Kirim Pesan";
+                  // Hilangkan notifikasi setelah 5 detik
+                  setTimeout(() => { status.innerHTML = ""; }, 5000);
+                });
+              }
+
+              form.addEventListener("submit", handleSubmit)
+            </script>
           </div>
 
         </div>
@@ -616,39 +665,39 @@
   <footer id="footer" class="footer accent-background">
 
     <footer id="footer" class="footer">
-  <div class="container footer-top">
-    <div class="row gy-4">
-      <div class="col-lg-5 col-md-12 footer-about">
-        <a href="index.html" class="logo d-flex align-items-center">
-          <span class="sitename">Acill Tech Solutions</span>
-        </a>
-        <p>Innovating Today, Empowering Tomorrow.</p>
+      <div class="container footer-top">
+        <div class="row gy-4">
+          <div class="col-lg-5 col-md-12 footer-about">
+            <a href="index.html" class="logo d-flex align-items-center">
+              <span class="sitename">Acill Tech Solutions</span>
+            </a>
+            <p>Innovating Today, Empowering Tomorrow.</p>
+          </div>
+
+          <div class="col-lg-3 col-6 footer-links">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="#about">About</a></li>
+              <li><a href="#services">Services</a></li>
+              <li><a href="#team">Team</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-4 col-md-12 footer-contact">
+            <h4>Contact Info</h4>
+            <p>Email: <span>service@aciltechsolutions.site</span></p>
+            <p>Phone: +62 812-xxxx-xxxx</p>
+            <p>Jakarta, Indonesia</p>
+          </div>
+        </div>
       </div>
 
-      <div class="col-lg-3 col-6 footer-links">
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="#about">About</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#team">Team</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
+      <div class="container copyright text-center mt-4">
+        <hr>
+        <p>© <span>2026</span> <strong class="px-1 sitename">Acill Tech Solutions</strong>. All rights reserved.</p>
       </div>
-
-      <div class="col-lg-4 col-md-12 footer-contact">
-        <h4>Contact Info</h4>
-        <p>Email: <span>service@aciltechsolutions.site</span></p>
-        <p>Phone: +62 812-xxxx-xxxx</p>
-        <p>Jakarta, Indonesia</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="container copyright text-center mt-4">
-    <hr>
-    <p>© <span>2026</span> <strong class="px-1 sitename">Acill Tech Solutions</strong>. All rights reserved.</p>
-  </div>
-</footer>
+    </footer>
 
   </footer>
   <!-- Scroll Top -->
